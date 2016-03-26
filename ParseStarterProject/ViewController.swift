@@ -17,17 +17,22 @@ class ViewController: UIViewController {
     @IBOutlet var password: UITextField!
     
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
+    
+    func displayAlert (title: String, message: String) {
+        
+        var alert = UIAlertController (title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        
+        alert.addAction((UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+            self.dismissViewControllerAnimated(true, completion: nil)
+        })))
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
 
     @IBAction func signUp(sender: AnyObject) {
        
         if username.text == "" || password.text == "" {
             
-            var alert = UIAlertController (title: "Error in form", message: "Please enter a username and password", preferredStyle: UIAlertControllerStyle.Alert)
-            
-            alert.addAction((UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
-                self.dismissViewControllerAnimated(true, completion: nil)
-            })))
-            self.presentViewController(alert, animated: true, completion: nil)
+displayAlert("Error in form", message: "Please enter a username and password")
             
             
         } else {
@@ -45,7 +50,7 @@ class ViewController: UIViewController {
             user.password = password.text
             user.signUpInBackgroundWithBlock({ (success, error) -> Void in
              
-            var errorMessage = "Please try again later"
+                var errorMessage:String = "Please try again later"
                 
                 self.activityIndicator.stopAnimating()
                 UIApplication.sharedApplication().endIgnoringInteractionEvents()
@@ -60,6 +65,8 @@ class ViewController: UIViewController {
                         errorMessage = errorString
                         
                 }
+                
+                self.displayAlert("Failed Signup", message: errorMessage)
             
             })
         }
